@@ -1,0 +1,65 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-action@stable
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Tauri App
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'WhatsApp Desktop v__VERSION__'
+          releaseBody: |
+            ## 📥 Download
+            
+            | File | Description |
+            |------|-------------|
+            | `WhatsApp.Desktop_x.x.x_x64-setup.exe` | Windows Installer (Recommended) |
+            | `WhatsApp.Desktop_x.x.x_x64_en-US.msi` | Windows MSI Package |
+            
+            ## ✨ Features
+            - 🚀 Lightning fast with ~30 MB RAM usage
+            - 🔔 Native Windows notifications
+            - 📌 System tray support
+            - 🚀 Windows startup integration
+            
+            ## 📋 What's New
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            
+            ## ⚙️ System Requirements
+            - Windows 10/11 (64-bit)
+            - WebView2 Runtime (pre-installed on Windows 10/11)
+          releaseDraft: false
+          prerelease: false

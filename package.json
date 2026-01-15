@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-desktop",
+  "version": "1.0.0",
+  "description": "A fast, lightweight WhatsApp Desktop wrapper built with Tauri",
+  "author": "Open Source Community",
+  "license": "MIT",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2"
+  }
+}
